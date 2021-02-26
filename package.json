@@ -1,11 +1,12 @@
 {
   "name": "kankyo",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A nice alternative to .env ",
   "main": "dist/lib/kankyo.js",
   "types": "dist/lib/kankyo.d.ts",
   "scripts": {
     "tsc": "tsc",
+    "doctoc": "doctoc ./README.md",
     "cli": "ts-node ./bin/cli.ts",
     "test": "ava --verbose",
     "prepublish": "npm run tsc"
@@ -42,6 +43,7 @@
     "@types/debug": "^4.1.5",
     "@types/node": "^14.14.31",
     "ava": "^3.15.0",
+    "doctoc": "^2.0.0",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.2"
   },

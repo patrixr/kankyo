@@ -7,30 +7,42 @@ An configurable and environment aware .env alternative.
 [![forthebadge](https://forthebadge.com/images/badges/check-it-out.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/uses-js.svg)](https://forthebadge.com)
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [Getting started](#getting-started)
+    - [Adding to your project](#adding-to-your-project)
+    - [Installed globally](#installed-globally)
+    - [With npx](#with-npx)
+- [Usage](#usage)
+  - [From the command line](#from-the-command-line)
+  - [Programatically](#programatically)
+  - [Fron NPM scripts](#fron-npm-scripts)
+- [Environment file](#environment-file)
+- [Generating the file](#generating-the-file)
+  - [Default Variables](#default-variables)
+  - [Configurable Environments](#configurable-environments)
+  - [Options](#options)
+- [String interpolation](#string-interpolation)
+- [Full file example](#full-file-example)
+- [Cross-platform](#cross-platform)
+- [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Getting started
 
-### Adding to your project
+#### Adding to your project
 
 `npm install --save kankyo`
 
-Kankyo can now be used in npm scripts
-
-```json
-{
-  ...
-  "scripts": {
-    "start": "kankyo exec -- node app.js"
-  }
-}
-```
-
-### Installed globally
+#### Installed globally
 
 `npm install -g kankyo`
 
-### With npx
+#### With npx
 
-`npx kankyo --help`
+`npx kankyo exec -- node app.js`
 
 ## Usage
 
@@ -52,6 +64,19 @@ e.g
 require('kankyo').inject();
 
 console.log(process.env);
+```
+
+### Fron NPM scripts
+
+Configure your scripts to run anything with Kankyo
+
+```javascript
+{
+  // ...
+  "scripts": {
+    "start": "kankyo exec -- node app.js"
+  }
+}
 ```
 
 ## Environment file
@@ -118,7 +143,6 @@ word_a    = "foo"
 word_b    = "bar"
 sentence  = "${word_a} ${word_b}"
 ```
-
 ## Full file example
 
 ```toml
@@ -138,6 +162,26 @@ sentence  = "${word_a} ${word_b}"
 word_a = "hello"
 word_b = "world"
 ```
+
+## Cross-platform
+
+Kankyō is not limited to nodejs projects. The `kankyo exec` command can run any type of project
+
+Example with Ruby:
+
+Set the `env_key` option to desired key
+
+```toml
+[options]
+
+env_key     = "RUBY_ENV"
+
+# ...
+```
+
+and run your ruby project
+
+`RUBY_ENV=development kankyo exec -- ruby program.rb`
 
 ## License
 
