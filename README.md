@@ -25,6 +25,8 @@ An configurable and environment aware .env alternative.
   - [Default Variables](#default-variables)
   - [Configurable Environments](#configurable-environments)
   - [Options](#options)
+    - [Required fields](#required-fields)
+      - [CI/CD](#cicd)
 - [String interpolation](#string-interpolation)
 - [Full file example](#full-file-example)
 - [Cross-platform](#cross-platform)
