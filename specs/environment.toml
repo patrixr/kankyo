@@ -1,0 +1,12 @@
+[options]
+env_key     = "MY_ENV"
+uppercase   = true
+
+[defaults]
+
+database_url = "postgres://${username}:${password}@localhost"
+
+[env.staging]
+
+username = "foo"
+password = "bar"

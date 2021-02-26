@@ -1,0 +1,15 @@
+[options]
+
+env_key     = "NODE_ENV"
+uppercase   = true
+
+[defaults]
+
+word_a    = "foo"
+word_b    = "bar"
+sentence  = "${word_a} ${word_b}"
+
+[env.production]
+
+word_a = "hello"
+word_b = "world"

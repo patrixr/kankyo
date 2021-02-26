@@ -1,0 +1,52 @@
+{
+  "name": "kankyo",
+  "version": "1.0.0",
+  "description": "A nice alternative to .env ",
+  "main": "dist/lib/kankyo.js",
+  "types": "dist/lib/kankyo.d.ts",
+  "scripts": {
+    "tsc": "tsc",
+    "cli": "ts-node ./bin/cli.ts",
+    "test": "ava --verbose"
+  },
+  "bin": {
+    "kankyo": "./dist/bin/cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patrixr/kankyo.git"
+  },
+  "keywords": [
+    "dotenv",
+    "env",
+    "toml",
+    "cli"
+  ],
+  "ava": {
+    "extensions": [
+      "ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ]
+  },
+  "author": "Patrick R",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/patrixr/kankyo/issues"
+  },
+  "homepage": "https://github.com/patrixr/kankyo#readme",
+  "devDependencies": {
+    "@types/commander": "^2.12.2",
+    "@types/debug": "^4.1.5",
+    "@types/node": "^14.14.31",
+    "ava": "^3.15.0",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.2"
+  },
+  "dependencies": {
+    "commander": "^7.1.0",
+    "debug": "^4.3.1",
+    "toml": "^3.0.0"
+  }
+}
