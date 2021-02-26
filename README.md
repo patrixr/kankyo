@@ -89,12 +89,12 @@ The default file name is `.kankyo.toml`
 
 However it also supports the following names as alternatives:
 
-- `.kankyo.toml'`
-- `.environment.toml'`
-- `.env.toml'`
-- `kankyo.toml'`
-- `environment.toml'`
-- `env.toml'`
+- `.kankyo.toml`
+- `.environment.toml`
+- `.env.toml`
+- `kankyo.toml`
+- `environment.toml`
+- `env.toml`
 
 ## Generating the file
 
@@ -118,7 +118,9 @@ database_name = "my_db"
 You can set any number of custom environments, here's an example of us setting a `staging` environment
 
 ```toml
-...
+[defaults]
+
+# ...
 
 [env.staging]
 
