@@ -10,6 +10,10 @@ import { load }               from '../lib/kankyo'
 
 logger.enable();
 
+if (process.argv.length === 2) {
+  process.argv.push('--help')
+}
+
 // -------------------
 // Helpers
 // -------------------
@@ -29,39 +33,35 @@ program
   .option('-f --file <file>', 'Specify the environment file')
   .version(process.version)
 
-program
-  .command('init')
-  .action(() => {
-    const existing = lookupKankyoFile();
+program.command('init').action(() => {
+  const existing = lookupKankyoFile();
 
-    if (existing) return logger.info('No file was created');
+  if (existing) return logger.info('No file was created');
 
-    fs.copyFileSync(
-      path.join(__dirname, '../samples', '.kankyo.toml'),
-      path.join(process.cwd(), '.kankyo.toml')
-    );
+  fs.copyFileSync(
+    path.join(__dirname, '../samples', '.kankyo.toml'),
+    path.join(process.cwd(), '.kankyo.toml')
+  );
 
-    logger.info('Created .kankyo.toml')
+  logger.info('Created .kankyo.toml')
+})
+
+program.command('exec').action(() => {
+  const { quiet, file } = program.opts();
+
+  if (quiet) logger.disable();
+
+  const env = file ? load(file) : load();
+
+  const [cmd, ...args] = parseCommand(process.argv);
+  
+  spawnSync(cmd, args, {
+    stdio: 'inherit',
+    env: {
+      ...process.env,
+      ...env
+    }
   })
-
-program
-  .command('exec')
-  .action(() => {
-    const { quiet, file } = program.opts();
-
-    if (quiet) logger.disable();
-
-    const env = file ? load(file) : load();
-
-    const [cmd, ...args] = parseCommand(process.argv);
-    
-    spawnSync(cmd, args, {
-      stdio: 'inherit',
-      env: {
-        ...process.env,
-        ...env
-      }
-    })
-  })
+})
 
 program.parse(process.argv);
