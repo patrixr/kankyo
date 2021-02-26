@@ -1,13 +1,12 @@
-import * as fs             from 'fs'
-import * as path           from 'path'
-import { info, error }     from './logger'
+import * as fs              from 'fs'
+import * as path            from 'path'
+import { info }             from './logger'
 
 interface Dict<T> {
   [key: string]: T
 }
 
 export function panic(err : string) : never {
-  error(err);
   throw new Error(err);
 }
 
@@ -91,7 +90,7 @@ export function detectFile() : string {
   const uri = lookupKankyoFile();
 
   if (!uri) {
-    panic('Kankyo environment file not found');
+    panic("Kankyo environment file not found.\nRun `npx kankyo init` to generate an env file");
   }
 
   return uri;

@@ -133,6 +133,46 @@ When run in staging mode, the default `database_name` will be overridden by the 
 
 * `env_var` - Set the variable name that defines which environment is used. Defaults to `NODE_ENV`
 * `uppercase` - If set, will uppercase all environment variable names. Defaults to `true`
+* `required` - An array of variable names which must be provided
+
+#### Required fields
+
+Under the `[options]` block, you can add a list of required variables
+
+e.g
+
+```toml
+[options]
+
+required = ["API_KEY]
+```
+
+An exception will be raised if that variable is missing during runtime
+
+```bash
+> kankyo exec -- <your app>
+
+  kankyo:info Kankyo environment file detected: .kankyo.toml +0ms
+  kankyo:info Loading environment +1ms
+  kankyo:error Missing environment variables: API_KEY +0ms
+```
+
+This forces users to either :
+
+- Add the value to the file (either in defaults or in the environment)
+- Add it to the shell environment
+
+```bash
+> API_KEY=123 kankyo exec -- <your app>
+
+  hello world !
+```
+
+##### CI/CD
+
+This feature is particularly useful when dealing with critical variables such as passwords, api keys.
+
+Your CI/CD platform can fill in those keys during deployment, and the error message keeps developers aware when working locally.
 
 ## String interpolation
 

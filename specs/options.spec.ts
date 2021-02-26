@@ -1,7 +1,10 @@
 import it         from 'ava'
 import { parse }  from '../lib/kankyo'
 
-it.afterEach(() => { delete process.env.MY_ENV });
+it.afterEach(() => { 
+  delete process.env.MY_ENV
+  delete process.env.KEY_B
+});
 
 it('uppercases keys by default', (t) => {
   const env = parse(`
@@ -60,4 +63,55 @@ it('can specify the environment variable using env_var=<string>', (t) => {
   `)
 
   t.is(env['SOME_KEY'], 'OTHER');
+})
+
+it('raises an error if a variable marked as required is missing', (t) => {
+  t.is(process.env["KEY_B"], void 0);
+  
+  const error = t.throws(() => {
+    parse(`
+      [options]
+
+      required = ["KEY_B"]
+
+      [defaults]
+      
+      KEY_A="foo"
+    `)
+  }, { instanceOf: Error })
+
+  t.is(error.message, 'Missing environment variables: KEY_B')
+})
+
+it('suceeds if required variables are added to the file', (t) => {
+  t.is(process.env["KEY_B"], void 0);
+  
+  t.notThrows(() => {
+    parse(`
+      [options]
+
+      required = ["KEY_B"]
+
+      [defaults]
+      
+      KEY_A="foo"
+      KEY_B="bar"
+    `)
+  });
+})
+
+it('suceeds if required variables are in the existing environment', (t) => {
+  process.env.KEY_B = "bar"
+  
+  t.notThrows(() => {
+    parse(`
+      [options]
+
+      required = ["KEY_B"]
+
+      [defaults]
+      
+      KEY_A="foo"
+    `)
+  });
 })

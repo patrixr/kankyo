@@ -47,21 +47,26 @@ program.command('init').action(() => {
 })
 
 program.command('exec').action(() => {
-  const { quiet, file } = program.opts();
+  try {
+    const { quiet, file } = program.opts();
 
-  if (quiet) logger.disable();
+    if (quiet) logger.disable();
 
-  const env = file ? load(file) : load();
+    const env = file ? load(file) : load();
 
-  const [cmd, ...args] = parseCommand(process.argv);
-  
-  spawnSync(cmd, args, {
-    stdio: 'inherit',
-    env: {
-      ...process.env,
-      ...env
-    }
-  })
+    const [cmd, ...args] = parseCommand(process.argv);
+    
+    spawnSync(cmd, args, {
+      stdio: 'inherit',
+      env: {
+        ...process.env,
+        ...env
+      }
+    })
+  } catch (e) {
+    logger.error(e.message);
+    process.exit(1);
+  }
 })
 
 program.parse(process.argv);

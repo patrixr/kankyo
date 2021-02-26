@@ -61,7 +61,7 @@ it('supports string interpolation', (t) => {
 
 it('detects circular interpolations', (t) => {
   const error = t.throws(() => {
-    const env = parse(`
+    parse(`
       [defaults]
       KEY_A="\${KEY_B}"
       KEY_B="\${KEY_A}"

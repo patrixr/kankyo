@@ -1,6 +1,7 @@
-import toml                 from 'toml'
-import fs                   from 'fs'
-import { info, error }      from './logger'
+import toml                                   from 'toml'
+import fs                                     from 'fs'
+import { info }                               from './logger'
+import { isTypedArray, variableExistsIn }     from './validation'
 import {
   detectFile,
   interpolate,
@@ -12,17 +13,18 @@ import {
 // Types
 // -----------------------------
 
-interface KankyoEnvironmentDict {
-  [key: string]: KankyoEnvironment
+export interface KankyoEnvironment {
+  [key: string]: any
 }
 
-interface KankyoEnvironment {
-  [key: string]: any
+interface KankyoEnvironmentDict {
+  [key: string]: KankyoEnvironment
 }
 
 interface KankyoOptions {
   env_key:      string
   uppercase:    boolean
+  required:     string[]
 }
 
 interface KankyoFile extends KankyoEnvironment {
@@ -37,7 +39,8 @@ interface KankyoFile extends KankyoEnvironment {
 
 const DEFAULT_OPTIONS = {
   env_key:      "NODE_ENV",
-  uppercase:    true
+  uppercase:    true,
+  required:     []
 } as KankyoOptions
 
 
@@ -80,6 +83,14 @@ function findEnvironment(config: KankyoFile) : KankyoEnvironment {
  */
 function normalizeFile(config: KankyoFile) : KankyoFile {
   const options = { ...DEFAULT_OPTIONS, ...(config.options || {}) } as KankyoOptions
+
+  if (!isTypedArray(options.required, "string")) {
+    throw new Error(`options.required expects an array of strings`)
+  }
+
+  if (options.uppercase) {
+    options.required = options.required.map(s => s.toUpperCase())
+  }
 
   config.options  = options;
   config.defaults = config.defaults || {};
@@ -129,6 +140,16 @@ export function parse(text : string) : KankyoEnvironment {
   const selected  = findEnvironment(config);
 
   let env = applyOverrides(serialize({ ...defaults, ...selected }));
+
+  // --- Verify required fields
+
+  const missing = config.options.required.filter(field => {
+    return !variableExistsIn(field, env, process.env);
+  });
+
+  if (missing.length) {
+    throw new Error(`Missing environment variables: ${missing.join(', ')}`)
+  }
 
   return env;
 }
