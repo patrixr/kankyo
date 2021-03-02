@@ -1,11 +1,12 @@
 {
   "name": "kankyo",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A nice alternative to .env ",
   "main": "dist/lib/kankyo.js",
   "types": "dist/lib/kankyo.d.ts",
   "scripts": {
     "tsc": "tsc",
+    "posttsc": "cp -r samples ./dist",
     "doctoc": "doctoc ./README.md",
     "cli": "ts-node ./bin/cli.ts",
     "test": "ava --verbose",
