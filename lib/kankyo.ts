@@ -1,6 +1,6 @@
 import toml                                   from 'toml'
 import fs                                     from 'fs'
-import { info }                               from './logger'
+import logger, { info }                       from './logger'
 import { isTypedArray, variableExistsIn }     from './validation'
 import {
   detectFile,
@@ -29,7 +29,8 @@ interface KankyoOptions {
 
 export interface KankyoParams {
   file?:    string,
-  env?:     string
+  env?:     string,
+  verbose?: boolean
 }
 
 interface KankyoFile extends KankyoEnvironment {
@@ -163,6 +164,8 @@ export function load(params: KankyoParams|string = {}) {
   const opts : KankyoParams = (typeof params === "string") ? { file: params } : params;
 
   opts.file = opts.file || detectFile();
+
+  if (opts.verbose) logger.enable();
 
   info('Loading environment');
   const text = fs.readFileSync(opts.file).toString();

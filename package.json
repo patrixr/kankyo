@@ -1,6 +1,6 @@
 {
   "name": "kankyo",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "A nice alternative to .env ",
   "main": "dist/lib/kankyo.js",
   "types": "dist/lib/kankyo.d.ts",
