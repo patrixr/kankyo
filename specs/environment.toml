@@ -10,3 +10,7 @@ database_url = "postgres://${username}:${password}@localhost"
 
 username = "foo"
 password = "bar"
+
+[env.production]
+
+username = "produser"

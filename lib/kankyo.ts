@@ -27,6 +27,11 @@ interface KankyoOptions {
   required:     string[]
 }
 
+export interface KankyoParams {
+  file?:    string,
+  env?:     string
+}
+
 interface KankyoFile extends KankyoEnvironment {
   options:  KankyoOptions
   defaults: KankyoEnvironment
@@ -55,8 +60,8 @@ const DEFAULT_OPTIONS = {
  * @param {KankyoFile} config
  * @returns {KankyoEnvironment}
  */
-function findEnvironment(config: KankyoFile) : KankyoEnvironment {
-  const env = process.env[config.options.env_key]
+function findEnvironment(config: KankyoFile, envOverride? : string) : KankyoEnvironment {
+  const env = envOverride ?? process.env[config.options.env_key]
 
   if (!env) {
     return {};
@@ -134,10 +139,10 @@ function serialize(env: KankyoEnvironment) : KankyoEnvironment {
 // API
 // -----------------------------
 
-export function parse(text : string) : KankyoEnvironment {
+export function parse(text : string, envName? : string) : KankyoEnvironment {
   const config    = normalizeFile(toml.parse(text));
   const defaults  = config.defaults || {}
-  const selected  = findEnvironment(config);
+  const selected  = findEnvironment(config, envName);
 
   let env = applyOverrides(serialize({ ...defaults, ...selected }));
 
@@ -154,14 +159,18 @@ export function parse(text : string) : KankyoEnvironment {
   return env;
 }
 
-export function load(file : string = detectFile()) {
+export function load(params: KankyoParams|string = {}) {
+  const opts : KankyoParams = (typeof params === "string") ? { file: params } : params;
+
+  opts.file = opts.file || detectFile();
+
   info('Loading environment');
-  const text = fs.readFileSync(file).toString();
-  return parse(text);
+  const text = fs.readFileSync(opts.file).toString();
+  return parse(text, opts.env);
 }
 
-export function inject(file : string = detectFile()) {
-  const env = load(file);
+export function inject(params: KankyoParams|string = {}) {
+  const env = load(params);
 
   Object.keys(env).forEach(key => {
     process.env[key] = env[key]

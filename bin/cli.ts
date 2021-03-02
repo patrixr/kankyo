@@ -6,7 +6,7 @@ import path                   from 'path'
 import logger                 from '../lib/logger'
 import { lookupKankyoFile }   from '../lib/utils'
 import { spawnSync }          from 'child_process'
-import { load }               from '../lib/kankyo'
+import { KankyoParams, load } from '../lib/kankyo'
 
 logger.enable();
 
@@ -30,6 +30,7 @@ function parseCommand(argv: string[]) {
 
 program
   .option('-q --quiet', 'Quiet mode')
+  .option('-e, --env <env>', 'Specify the environment manually')
   .option('-f --file <file>', 'Specify the environment file')
   .version(process.version)
 
@@ -48,11 +49,11 @@ program.command('init').action(() => {
 
 program.command('exec').action(() => {
   try {
-    const { quiet, file } = program.opts();
+    const { quiet, file, env } = program.opts();
 
     if (quiet) logger.disable();
 
-    const env = file ? load(file) : load();
+    const strings = load({ file, env });
 
     const [cmd, ...args] = parseCommand(process.argv);
     
@@ -60,7 +61,7 @@ program.command('exec').action(() => {
       stdio: 'inherit',
       env: {
         ...process.env,
-        ...env
+        ...strings
       }
     })
   } catch (e) {

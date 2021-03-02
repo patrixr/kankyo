@@ -13,3 +13,12 @@ it('loads the toml file and parses it', (t) => {
   t.is(env['PASSWORD'], "bar")
   t.is(env['DATABASE_URL'], "postgres://foo:bar@localhost")
 });
+
+it('supports an environment override param', (t) => {
+  const env = load({
+    file: join(__dirname, 'environment.toml'),
+    env: 'production'
+  })
+
+  t.is(env['USERNAME'], "produser")
+});
