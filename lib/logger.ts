@@ -4,16 +4,16 @@ export const info     = debug(`kankyo:info`);
 export const error    = debug(`kankyo:error`);
 export const verbose  = debug(`kankyo:verbose`);
 
-function getEnabledTypes() {
-  return (process.env.DEBUG || "").split(',').filter(type => !/kankyo/.test(type))
-}
-
 export function enable() {
-  debug.enable([getEnabledTypes(), 'kankyo:*'].join(','));
+  info.enabled = true;
+  error.enabled = true;
+  verbose.enabled = true;
 }
 
 export function disable() {
-  debug.enable(getEnabledTypes().join(','));
+  info.enabled = false;
+  error.enabled = false;
+  verbose.enabled = false;
 }
 
 export default { info, error, verbose, enable, disable }
