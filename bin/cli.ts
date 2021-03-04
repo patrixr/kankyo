@@ -57,13 +57,19 @@ program.command('exec').action(() => {
 
     const [cmd, ...args] = parseCommand(process.argv);
     
-    spawnSync(cmd, args, {
+    const spawn = spawnSync(cmd, args, {
       stdio: 'inherit',
       env: {
         ...process.env,
         ...strings
       }
     })
+
+    const status = spawn.status || 0;
+
+    if (spawn.error) console.log(spawn.error);
+    process.exit(status);
+
   } catch (e) {
     logger.error(e.message);
     process.exit(1);
