@@ -145,7 +145,7 @@ export function parse(text : string, envName? : string) : KankyoEnvironment {
   const defaults  = config.defaults || {}
   const selected  = findEnvironment(config, envName);
 
-  let env = applyOverrides(serialize({ ...defaults, ...selected }));
+  let env = serialize(applyOverrides({ ...defaults, ...selected }));
 
   // --- Verify required fields
 
