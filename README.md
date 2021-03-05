@@ -58,16 +58,17 @@ $> npx kankyo --help
 Usage: cli [options] [command]
 
 Options:
-  -q --quiet        Quiet mode
-  -e, --env <env>   Specify the environment manually
-  -f --file <file>  Specify the environment file
-  -V, --version     output the version number
-  -h, --help        display help for command
+  -q --quiet          Quiet mode
+  -e, --env <env>     Specify the environment manually
+  -f --force          If set, will ignore schema/required fields mismatch
+  -i, --input <file>  Specify the environment file
+  -V, --version       output the version number
+  -h, --help          display help for command
 
 Commands:
   init
   exec
-  help [command]    display help for command
+  help [command]      display help for command
 ```
 
 By using the cli's `exec` command, followed by your own shell command, Kankyō will load the environment and run the specified command with it.

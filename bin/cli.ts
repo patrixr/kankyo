@@ -31,7 +31,8 @@ function parseCommand(argv: string[]) {
 program
   .option('-q --quiet', 'Quiet mode')
   .option('-e, --env <env>', 'Specify the environment manually')
-  .option('-f --file <file>', 'Specify the environment file')
+  .option('-f --force', 'If set, will ignore schema/required fields mismatch')
+  .option('-i, --input <file>', 'Specify the environment file')
   .version(process.version)
 
 program.command('init').action(() => {
@@ -49,11 +50,11 @@ program.command('init').action(() => {
 
 program.command('exec').action(() => {
   try {
-    const { quiet, file, env } = program.opts();
+    const { quiet, force, input, env } = program.opts();
 
     if (quiet) logger.disable();
 
-    const strings = load({ file, env });
+    const strings = load({ file: input, force: !!force, env });
 
     const [cmd, ...args] = parseCommand(process.argv);
     

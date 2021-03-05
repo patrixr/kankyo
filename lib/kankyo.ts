@@ -30,7 +30,8 @@ interface KankyoOptions {
 export interface KankyoParams {
   file?:    string,
   env?:     string,
-  verbose?: boolean
+  verbose?: boolean,
+  force?:   boolean
 }
 
 interface KankyoFile extends KankyoEnvironment {
@@ -140,14 +141,16 @@ function serialize(env: KankyoEnvironment) : KankyoEnvironment {
 // API
 // -----------------------------
 
-export function parse(text : string, envName? : string) : KankyoEnvironment {
+export function parse(text : string, params : KankyoParams = {}) : KankyoEnvironment {
   const config    = normalizeFile(toml.parse(text));
   const defaults  = config.defaults || {}
-  const selected  = findEnvironment(config, envName);
+  const selected  = findEnvironment(config, params.env);
 
   let env = serialize(applyOverrides({ ...defaults, ...selected }));
 
   // --- Verify required fields
+
+  if (params.force) return env;
 
   const missing = config.options.required.filter(field => {
     return !variableExistsIn(field, env, process.env);
@@ -168,8 +171,9 @@ export function load(params: KankyoParams|string = {}) {
   if (opts.verbose) logger.enable();
 
   info('Loading environment');
+
   const text = fs.readFileSync(opts.file).toString();
-  return parse(text, opts.env);
+  return parse(text, opts);
 }
 
 export function inject(params: KankyoParams|string = {}) {
