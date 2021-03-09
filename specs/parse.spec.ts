@@ -49,6 +49,7 @@ it('supports string interpolation', (t) => {
     [defaults]
 
     DATABASE_URL="postgres://\${USERNAME}:\${PASSWORD}@endpoint"
+    SOME_VAR="\${MY_ENV}"
 
     [env.staging]
 
@@ -57,6 +58,7 @@ it('supports string interpolation', (t) => {
   `)
 
   t.is(env['DATABASE_URL'], "postgres://foo:bar@endpoint");
+  t.is(env['SOME_VAR'], "staging");
 })
 
 it('detects circular interpolations', (t) => {

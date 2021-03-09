@@ -112,29 +112,18 @@ function normalizeFile(config: KankyoFile) : KankyoFile {
 }
 
 /**
- * If any key exists in process.env, use that as priority
- *
- * @export
- * @param {KankyoEnvironment} env
- * @returns {KankyoEnvironment}
- */
-function applyOverrides(env: KankyoEnvironment) : KankyoEnvironment {
-  return mapValues(env, (v, k) => process.env[k] ? process.env[k] : v);
-}
-
-/**
  * Transforms every value into a string
  *
  * @export
  * @param {KankyoEnvironment} env
  * @returns {KankyoEnvironment}
  */
-function serialize(env: KankyoEnvironment) : KankyoEnvironment {
+function serialize(env: KankyoEnvironment, keys: string[] = Object.keys(env)) : KankyoEnvironment {
   const strings = mapValues(env, (v) => {
     return (typeof v === 'string') ? v : JSON.stringify(v);
   })
 
-  return mapValues(strings, (s) => interpolate(s, strings));
+  return mapValues(strings, (s, k) => keys.includes(k) ? interpolate(s, strings) : s);
 }
 
 // -----------------------------
@@ -146,7 +135,11 @@ export function parse(text : string, params : KankyoParams = {}) : KankyoEnviron
   const defaults  = config.defaults || {}
   const selected  = findEnvironment(config, params.env);
 
-  let env = serialize(applyOverrides({ ...defaults, ...selected }));
+  let env = serialize({
+    ...defaults,
+    ...selected,
+    ...process.env
+  },);
 
   // --- Verify required fields
 
